@@ -25,7 +25,6 @@ console.log(fecha.getMilliseconds());
 console.log(fecha.toString());
 console.log(fecha.toDateString());
 console.log(fecha.toLocaleString());
-console.log(fecha.toLocaleString());
 console.log(fecha.toLocaleTimeString());
 console.log(fecha.getTimezoneOffset());
 
