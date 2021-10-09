@@ -22,3 +22,64 @@ La clase recibirá un objeto al momento de instanciarse con los siguentes datos:
 
 * Géneros Aceptados: Action, Adult, Adventure, Animation, Biography, Comedy, Crime, Documentary ,Drama, Family, Fantasy, Film Noir, Game-Show, History, Horror, Musical, Music, Mystery, News, Reality-TV, Romance, Sci-Fi, Short, Sport, Talk-Show, Thriller, War, Western.
 */
+
+class Pelicula {
+  constructor({ id, titulo, director, estreno, pais, generos, calificacion }) {
+    this.id = id;
+    this.titulo = titulo;
+    this.director = director;
+    this.estreno = estreno;
+    this.pais = pais;
+    this.generos = generos;
+    this.calificacion = calificacion;
+
+    this.validarIMDB(id);
+    this.validarTitulo(titulo);
+    this.validarDirector(director);
+  }
+
+  validarCadena(propiedad, valor) {
+    if (!valor) return console.warn(`${propiedad} "${valor}" esta vacio`);
+    if (typeof valor !== 'string')
+      return console.error(
+        `${propiedad} "${valor}" ingresado, NO es una cadena de texto`
+      );
+    return true;
+  }
+
+  validarLongitudCadena(propiedad, valor, longitud) {
+    if (valor.length > longitud)
+      return console.error(
+        `${propiedad} "${valor}" excede el numero de carateres permitidos (${longitud})`
+      );
+    return true;
+  }
+
+  validarIMDB(id) {
+    if (this.validarCadena('IMDB id', id)) {
+      if (!/^([a-z]){2}([0-9]){7}$/.test(id)) {
+        return console.error(
+          `IMDB id "${id}" no es valido, debe tener 9 carateres, los 2 primeros letras minusculas, los 7 restantes numeros`
+        );
+      }
+    }
+  }
+
+  validarTitulo(titulo) {
+    if (this.validarCadena('Titulo', titulo)) {
+      this.validarLongitudCadena('Titulo', titulo, 100);
+    }
+  }
+
+  validarDirector(director) {
+    if (this.validarCadena('Director', director)) {
+      this.validarLongitudCadena('Director', director, 50);
+    }
+  }
+}
+
+const peli = new Pelicula({
+  id: 'tt1234567',
+  titulo: 'Titulo de la Peli',
+  director: 'Director de la Peli',
+});
