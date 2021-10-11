@@ -36,6 +36,49 @@ class Pelicula {
     this.validarIMDB(id);
     this.validarTitulo(titulo);
     this.validarDirector(director);
+    this.validarEstreno(estreno);
+    this.validarPais(pais);
+    this.validarGeneros(generos);
+    this.validarCalificacion(calificacion);
+  }
+
+  static get listaGeneros() {
+    return [
+      'Action',
+      'Adult',
+      'Adventure',
+      'Animation',
+      'Biography',
+      'Comedy',
+      'Crime',
+      'Documentary',
+      'Drama',
+      'Family',
+      'Fantasy',
+      'Film Noir',
+      'Game-Show',
+      'History',
+      'Horror',
+      'Musical',
+      'Music',
+      'Mystery',
+      'News',
+      'Reality-TV',
+      'Romance',
+      'Sci-Fi',
+      'Short',
+      'Sport',
+      'Talk-Show',
+      'Thriller',
+      'War',
+      'Western',
+    ];
+  }
+
+  static generosAceptados() {
+    return console.info(
+      `Los generos aceptados son ${Pelicula.listaGeneros.join(', ')}`
+    );
   }
 
   validarCadena(propiedad, valor) {
@@ -52,6 +95,30 @@ class Pelicula {
       return console.error(
         `${propiedad} "${valor}" excede el numero de carateres permitidos (${longitud})`
       );
+    return true;
+  }
+
+  validarNumero(propiedad, valor) {
+    if (!valor) return console.warn(`${propiedad} "${valor}" esta vacio`);
+    if (typeof valor !== 'number')
+      return console.error(`${propiedad} "${valor}"ingresado, NO es un numero`);
+    return true;
+  }
+
+  validarArreglo(propiedad, valor) {
+    if (!valor) return console.warn(`${propiedad} "${valor}" esta vacio`);
+    if (!(valor instanceof Array))
+      return console.error(
+        `${propiedad} "${valor}" ingresado, NO es un arreglo`
+      );
+    if (valor.length === 0)
+      return console.error(`${propiedad} "${valor}" NO tiene datos`);
+    for (let num of valor) {
+      if (typeof num !== 'string')
+        return console.error(
+          `El valor "${num}"ingresado, NO es una cadena de texto`
+        );
+    }
     return true;
   }
 
@@ -76,10 +143,98 @@ class Pelicula {
       this.validarLongitudCadena('Director', director, 50);
     }
   }
+
+  validarEstreno(estreno) {
+    if (this.validarNumero('Año de esteno', estreno)) {
+      if (!/^([0-9]){4}$/.test(estreno)) {
+        return console.error(
+          `Año de estreno "${estreno}" no es valido, debe ser un numero de 4 digitos`
+        );
+      }
+    }
+  }
+
+  validarPais(pais) {
+    this.validarArreglo('Pais', pais);
+  }
+
+  validarGeneros(generos) {
+    if (this.validarArreglo('Géneros', generos)) {
+      for (const genero of generos) {
+        // console.log(genero, Pelicula.listaGeneros.includes(genero));
+        if (!Pelicula.listaGeneros.includes(genero)) {
+          console.error(`Géneros incorrectos "${generos.join(', ')}`);
+          Pelicula.generosAceptados();
+        }
+      }
+    }
+  }
+
+  validarCalificacion(calificacion) {
+    if (this.validarNumero('Calificacion', calificacion)) {
+      return calificacion < 0 || calificacion > 10
+        ? console.error(
+            `La calificacion tiene que estar en un rango entre 0 y 10`
+          )
+        : (this.calificacion = calificacion.toFixed(1));
+    }
+  }
+
+  fichaTecnica() {
+    console.info(
+      `Ficha Técnica: \nTítulo: ${this.titulo} \nDirector: ${
+        this.director
+      }\nAño: ${this.estreno} \nPais: ${this.pais.join(
+        ', '
+      )}\nGéneros: ${this.generos.join(', ')}\nCalificación: ${
+        this.calificacion
+      }\nIMDB id: ${this.id}`
+    );
+  }
 }
 
-const peli = new Pelicula({
-  id: 'tt1234567',
-  titulo: 'Titulo de la Peli',
-  director: 'Director de la Peli',
-});
+// Pelicula.generosAceptados();
+
+// const peli = new Pelicula({
+//   id: 'tt1234567',
+//   titulo: 'Titulo de la Peli',
+//   director: 'Director de la Peli',
+//   estreno: 2020,
+//   pais: ['Colombia'],
+//   generos: ['Comedy', 'Crime'],
+//   calificacion: 3.222,
+// });
+
+// peli.fichaTecnica();
+
+const misPelis = [
+  {
+    id: 'tt1234567',
+    titulo: 'el titulo',
+    director: 'John Herrera',
+    estreno: 2020,
+    pais: ['Colombia'],
+    generos: ['Comedy', 'Crime'],
+    calificacion: 1.5,
+  },
+  {
+    id: 'tt1234568',
+    titulo: 'el titulo',
+    director: 'John Herrera',
+    estreno: 2020,
+    pais: ['Colombia'],
+    generos: ['Comedy', 'Crime'],
+    calificacion: 2,
+  },
+  {
+    id: 'tt1234569',
+    titulo: 'el titulo',
+    director: 'John Herrera',
+    estreno: 2020,
+    pais: ['Colombia'],
+    generos: ['Comedy', 'Crime'],
+    calificacion: 8,
+  },
+];
+
+misPelis.forEach((el) => new Pelicula(el).fichaTecnica());
